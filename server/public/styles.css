@@ -1,0 +1,13 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+.custom-container {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+main {
+  position: relative;
+  min-height: calc(100vh - 146px);
+}
