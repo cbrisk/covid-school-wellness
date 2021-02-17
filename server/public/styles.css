@@ -11,3 +11,15 @@ main {
   position: relative;
   min-height: calc(100vh - 146px);
 }
+
+.main-color {
+  background-color: #2A2B37;
+  color: #E2C792;
+}
+
+.sign-form {
+  width: 90%;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid #2A2B37;
+}
