@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Home from './pages/home';
+import Header from './components/header';
+import Footer from './components/footer';
 import decodeToken from './lib/decode-token';
-import AppContext from '../lib/app-context';
+import AppContext from './lib/app-context';
 import parseRoute from './lib/parse-route';
+import SignUp from './pages/sign-up';
+import SignIn from './pages/sign-in';
+import Redirect from './components/redirect';
 
 
 const App = () => {
@@ -11,7 +16,7 @@ const App = () => {
   const [ route, setRoute ] = useState(parseRoute(window.location.hash))
 
   useEffect(() => {
-    const localStorage = window.localStorage.getItem('jwt');
+    const localStorage = window.localStorage.getItem('csw');
     const token = localStorage || null;
     const user = token ? decodeToken(token) : null;
     setUser(user);
@@ -22,12 +27,12 @@ const App = () => {
   }, []);
 
   const updateUser = token => {
-    window.localStorage.setItem('jwt', token);
+    window.localStorage.setItem('csw', token);
     setUser(decodeToken(token));
   }
 
   const signOut = () => {
-    window.localStorage.removeItem('jwt');
+    window.localStorage.removeItem('csw');
     setUser(null);
   }
 
@@ -38,19 +43,19 @@ const App = () => {
       return <SignUp />;
     } else if (route.path === 'sign-in') {
       return <SignIn />;
-    } else if (!token) {
+    } else if (!user) {
       return <Redirect to="sign-in" />;
     }
   }
 
   if (isAuthorizing) return null;
-  const { type } = user;
+  const type = user ? user.type : null;
   const contextValue = { signOut, updateUser, user, type };
   return (
     <AppContext.Provider value={contextValue}>
       <div className="custom-container">
         <Header />
-        { this.renderPage()}
+        { renderPage() }
         <Footer />
       </div>
     </AppContext.Provider>

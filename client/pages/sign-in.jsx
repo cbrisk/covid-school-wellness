@@ -1,5 +1,6 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState, useReducer, useContext } from 'react';
 import Redirect from '../components/redirect';
+import AppContext from '../lib/app-context';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -19,7 +20,7 @@ const SignIn = () => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const [ error, setError ] = useState('');
-  const { user, signOut, updateUser } = useContext(AppContext);
+  const { user, updateUser } = useContext(AppContext);
 
 
   const handleSubmit = event => {
@@ -46,40 +47,60 @@ const SignIn = () => {
       });
   }
 
+  if (user) return <Redirect to="" />;
   return (
-    <main className="main-color">
-      <div className="sign-form">
-        <form className="d-flex flex-column align-items-center pt-3">
-          <label htmlFor="username" className="form-label">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            required
-            onChange={(event) => {
-              dispatch({
-                type: 'username',
-                payload: event.target.value
-              })
-            }}
-            value={state.username} />
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            required
-            onChange={(event) => {
-              dispatch({
-                type: 'password',
-                payload: event.target.value
-              })
-            }}
-            value={state.password} />
+    <main className="main-color d-flex align-items-center">
+      <div className="sign-form rounded">
+        <form className="d-flex flex-column align-items-center black pt-3" onSubmit={handleSubmit}>
+          <h4>Sign In</h4>
+          <div className="mb-3 mt-2">
+            <label htmlFor="username" className="form-label black">Username</label>
+            <input
+              className="black form-control"
+              type="text"
+              name="username"
+              id="username"
+              required
+              onChange={(event) => {
+                dispatch({
+                  type: 'username',
+                  payload: event.target.value
+                })
+              }}
+              value={state.username} />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label black">Password</label>
+            <input
+              className="black form-control"
+              type="password"
+              name="password"
+              id="password"
+              required
+              onChange={(event) => {
+                dispatch({
+                  type: 'password',
+                  payload: event.target.value
+                })
+              }}
+              value={state.password} />
+          </div>
+          <div>
+            <button className="py-2 px-4 border-0 text-center rounded main-color mb-0 mt-2" type="submit">
+              Sign In
+            </button>
+          </div>
+          <div>
+            <p className="text-danger my-2">{error}</p>
+          </div>
+          <div className="pb-2 text-center">
+            <p className="mb-0 black">Don&apos;t have an account?</p>
+            <a href="#sign-up" className="text-decoration-none text-primary">Sign Up</a>
+          </div>
         </form>
       </div>
-    <main/>
+    </main>
   );
 }
 
-export default SignIn
+export default SignIn;

@@ -9,7 +9,7 @@
 
 main {
   position: relative;
-  min-height: calc(100vh - 146px);
+  min-height: calc(100vh - 160px);
 }
 
 .main-color {
@@ -22,4 +22,12 @@ main {
   margin: 0 auto;
   background-color: white;
   border: 1px solid #2A2B37;
+}
+
+.black {
+  color: #2A2B37;
+}
+
+.footer-size {
+  font-size: 3.2rem;
 }
