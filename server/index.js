@@ -5,6 +5,8 @@ const argon2 = require('argon2');
 const authenticateUser = require('./authenticate-user');
 const authorizationMiddleware = require('./authorization-middleware');
 const staticMiddleware = require('./static-middleware');
+const ClientError = require('./client-error');
+const errorMiddleware = require('./error-middleware');
 
 const app = express();
 
@@ -18,16 +20,17 @@ const db = new pg.Pool({
 });
 
 app.post('/api/sign-up', (req, res, next) => {
-  const { username, password, name } = req.body;
-  if (!username || !password || !name) {
-    throw new ClientError(400, 'name, username, password, and user-type are required fields');
+  const { name, username, password, role } = req.body;
+  console.log(req.body);
+  if (!name || !username || !password || !role) {
+    throw new ClientError(400, 'name, username, password, and role are required fields');
   }
   argon2
     .hash(password)
     .then(hashedPassword => {
       const sql = `
         insert into "users" ("name", "username", "password", "role")
-        values ($1, $2, $3)
+        values ($1, $2, $3, $4)
         on conflict ("username")
         do nothing
         returning "userId"
@@ -64,7 +67,7 @@ app.post('/api/sign-in', (req, res, next) => {
     });
 });
 
-
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
