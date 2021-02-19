@@ -25,7 +25,7 @@ function authenticateUser(username, passwordInput, db) {
             if (!isMatching) {
               throw new ClientError(401, 'Username or password aren\'t valid.');
             }
-            const payload = { userId, username, type };
+            const payload = { userId, username, role };
             const token = jwt.sign(payload, process.env.TOKEN_SECRET);
             resolve({ token, user: payload });
           });

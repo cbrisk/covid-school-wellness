@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "argon2": "^0.27.1",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",

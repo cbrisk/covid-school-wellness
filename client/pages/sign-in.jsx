@@ -2,26 +2,26 @@ import React, { useState, useReducer, useContext } from 'react';
 import Redirect from '../components/redirect';
 import AppContext from '../lib/app-context';
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'username':
-      return { username: action.payload };
-    case 'password':
-      return { password: action.payload };
-    default:
-      return state;
-  }
+const initialState = {
+  username: '',
+  password: ''
+};
+
+const reducer = (state, { name, value }) => {
+  return { ...state, [name]: value }
 }
 
 const SignIn = () => {
-  const initialState = {
-    username: '',
-    password: ''
-  };
   const [state, dispatch] = useReducer(reducer, initialState);
   const [ error, setError ] = useState('');
   const { user, updateUser } = useContext(AppContext);
 
+  const handleChange = event => {
+    dispatch({
+      name: event.target.name,
+      value: event.target.value
+    })
+  }
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -61,12 +61,7 @@ const SignIn = () => {
               name="username"
               id="username"
               required
-              onChange={(event) => {
-                dispatch({
-                  type: 'username',
-                  payload: event.target.value
-                })
-              }}
+              onChange={handleChange}
               value={state.username} />
           </div>
           <div className="mb-3">
@@ -77,12 +72,7 @@ const SignIn = () => {
               name="password"
               id="password"
               required
-              onChange={(event) => {
-                dispatch({
-                  type: 'password',
-                  payload: event.target.value
-                })
-              }}
+              onChange={handleChange}
               value={state.password} />
           </div>
           <div>
@@ -93,7 +83,7 @@ const SignIn = () => {
           <div>
             <p className="text-danger my-2">{error}</p>
           </div>
-          <div className="pb-2 text-center">
+          <div className="pb-4 text-center">
             <p className="mb-0 black">Don&apos;t have an account?</p>
             <a href="#sign-up" className="text-decoration-none text-primary">Sign Up</a>
           </div>

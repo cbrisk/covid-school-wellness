@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Home from './pages/home';
+import HomeStudent from './pages/home-student';
 import Header from './components/header';
 import Footer from './components/footer';
 import decodeToken from './lib/decode-token';
@@ -37,20 +37,19 @@ const App = () => {
   }
 
   const renderPage = () => {
-    if (route.path === '') {
-      return <Home />;
-    } else if (route.path === 'sign-up') {
+    if (route.path === 'sign-up') {
       return <SignUp />;
     } else if (route.path === 'sign-in') {
       return <SignIn />;
     } else if (!user) {
       return <Redirect to="sign-in" />;
+    } else if (route.path === '' && user.role === 'student') {
+      return <HomeStudent />;
     }
   }
 
   if (isAuthorizing) return null;
-  const type = user ? user.type : null;
-  const contextValue = { signOut, updateUser, user, type };
+  const contextValue = { signOut, updateUser, user };
   return (
     <AppContext.Provider value={contextValue}>
       <div className="custom-container">
