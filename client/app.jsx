@@ -12,28 +12,29 @@ import Redirect from './components/redirect';
 
 const App = () => {
   const [ user, setUser ] = useState(null);
+  const [token, setToken] = useState(null);
   const [ isAuthorizing, setAuthorizing ] = useState(true);
   const [ route, setRoute ] = useState(parseRoute(window.location.hash))
 
   useEffect(() => {
     const localStorage = window.localStorage.getItem('csw');
-    const token = localStorage || null;
+    setToken(localStorage || null);
     const user = token ? decodeToken(token) : null;
     setUser(user);
     setAuthorizing(false);
     window.addEventListener('hashchange', event => {
-      setRoute(parseRoute(window.location.hash))
+      setRoute(parseRoute(window.location.hash));
     });
-  }, []);
+  }, [token]);
 
   const updateUser = token => {
     window.localStorage.setItem('csw', token);
-    setUser(decodeToken(token));
+    setToken(token);
   }
 
   const signOut = () => {
     window.localStorage.removeItem('csw');
-    setUser(null);
+    setToken(null);
   }
 
   const renderPage = () => {
@@ -43,13 +44,13 @@ const App = () => {
       return <SignIn />;
     } else if (!user) {
       return <Redirect to="sign-in" />;
-    } else if (route.path === '' && user.role === 'student') {
+    } else if (route.path === 'student') {
       return <HomeStudent />;
     }
   }
 
   if (isAuthorizing) return null;
-  const contextValue = { signOut, updateUser, user };
+  const contextValue = { signOut, updateUser, user, token };
   return (
     <AppContext.Provider value={contextValue}>
       <div className="custom-container">

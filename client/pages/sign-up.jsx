@@ -49,7 +49,8 @@ const SignUp = () => {
       });
   }
 
-  if (user) return <Redirect to="" />;
+  if (user && user.role === 'student') return <Redirect to="student" />;
+  if (user && user.role === 'admin') return <Redirect to="admin" />
   return (
     <main className="main-color d-flex align-items-center">
       <div className="sign-form rounded">
@@ -90,23 +91,23 @@ const SignUp = () => {
           </div>
           <div className="form-check py-2 black">
             <input
-              className="form-check-input"
+              className="form-check-input black"
               type="radio"
               name="role"
               id="admin"
               value="admin"
               checked={state.role === "admin"}
               onChange={handleChange} />
-            <label className="form-check-label pr-5" htmlFor="admin">Admin</label>
+            <label className="black form-check-label pr-5" htmlFor="admin">Admin</label>
             <input
-              className="form-check-input"
+              className="form-check-input black"
               type="radio"
               name="role"
               id="student"
               value="student"
               checked={state.role === "student"}
               onChange={handleChange}></input>
-            <label className="form-check-label" htmlFor="student">Student</label>
+            <label className="black form-check-label" htmlFor="student">Student</label>
           </div>
           <div>
             <button className="py-2 px-4 border-0 text-center rounded main-color my-2" type="submit">
