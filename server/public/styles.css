@@ -17,11 +17,15 @@ main {
   color: #E2C792;
 }
 
-.sign-form {
+.sign-form,
+.symptom-form {
   width: 80%;
   margin: 0 auto;
   background-color: white;
-  border: 1px solid #2A2B37;
+}
+
+.symptom-form {
+  width: 90%;
 }
 
 .black {
@@ -34,4 +38,11 @@ main {
 
 i.home-icon {
   font-size: 1.6rem;
+}
+
+@media screen and (min-width: 768px) {
+  .sign-form,
+  .symptom-form {
+    max-width: 500px;
+  }
 }
