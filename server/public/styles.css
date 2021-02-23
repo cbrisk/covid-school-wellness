@@ -40,6 +40,13 @@ i.home-icon {
   font-size: 1.6rem;
 }
 
+.message {
+  font-size: 1.8rem;
+  text-align: center;
+  color: white;
+  font-weight: 400;
+}
+
 @media screen and (min-width: 768px) {
   .sign-form,
   .symptom-form {
