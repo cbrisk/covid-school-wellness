@@ -44,6 +44,8 @@ const App = () => {
       return <SignIn />;
     } else if (!user) {
       return <Redirect to="sign-in" />;
+    } else if (route.path === '' && user.role === 'student') {
+      return <Redirect to="student" />;
     } else if (route.path === 'student') {
       return <StudentMain />;
     }

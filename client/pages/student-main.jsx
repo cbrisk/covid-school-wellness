@@ -14,22 +14,41 @@ const StudentMain = props => {
   const [ startDate, setStartDate ] = useState(null);
   const [ stayHomeDate, setStayHomeDate, ref] = useStateRef(null);
 
-  // useEffect(() => {
-  //   fetch(url, {
-  //     headers: {
-  //       'X-Access-Token': token
-  //     }
-  //   })
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (data.length) {
-  //         setStatus('stay-home');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // }, [])
+  useEffect(() => {
+    fetch('/api/stay-home', {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Token': token
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.length) {
+          setStatus('stay-home');
+          setStayHomeDate(dayjs(data.returnDate).format('YYYY-MM-DD'));
+        } else {
+          return fetch(`/api/coming-today/date/${dayjs().format('YYYY-MM-DD')}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Access-Token': token
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.length && dayjs().hour() >= 6 && dayjs().hour() <= 12) {
+                setStatus('coming today');
+              } else if (dayjs().hour() >= parseInt('06', 10) && dayjs().hour() <= parseInt('09', 10)) {
+                setStatus('get-form');
+              } else {
+                setStatus('school-day');
+              }
+            });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }, [])
 
   const handleChange = event => {
     if (event.target.name === 'symptoms') {
@@ -85,9 +104,6 @@ const StudentMain = props => {
     }
   }
 
-  const today = dayjs().format('YYYY-MM-DD');
-  const fourDaysAgo = dayjs().subtract(4, 'day').format('YYYY-MM-DD');
-
   if (!user) return <Redirect to="sign-in" />;
   return (
     <main className="main-color">
@@ -97,11 +113,15 @@ const StudentMain = props => {
         <Message>We look forward to seeing you at school!</Message>
       }
       {
+        status === 'school-day' &&
+        <Message>Please come back here on the next school day between 6AM and 9AM to fill out the wellness form.</Message>
+      }
+      {
         status === 'stay-home' &&
         <Message>{`We are very sorry. You must stay home from school until ${dayjs(stayHomeDate).format('dddd MM/DD/YYYY')}`}</Message>
       }
       {
-        status === '' &&
+        status === 'get-form' &&
         <div className="symptom-form rounded">
           <form className="d-flex flex-column black pt-3" onSubmit={handleSubmit}>
             <div className="text-center">
@@ -126,7 +146,7 @@ const StudentMain = props => {
             </div>
             <div className="d-flex flex-column align-items-center">
               <h5>When did the symptoms begin?</h5>
-              <input type="date" name="symptoms" onChange={handleChange} min={fourDaysAgo} max={today} />
+              <input type="date" name="symptoms" onChange={handleChange} min={dayjs().subtract(4, 'day').format('YYYY-MM-DD')} max={dayjs().format('YYYY-MM-DD')} />
               <div>
                 <button className="py-2 px-4 border-0 text-center rounded main-color m-3" type="submit">
                   Submit

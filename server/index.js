@@ -2,6 +2,7 @@ require('dotenv/config');
 const express = require('express');
 const pg = require('pg');
 const argon2 = require('argon2');
+const dayjs = require ('dayjs');
 const authenticateUser = require('./authenticate-user');
 const authorizationMiddleware = require('./authorization-middleware');
 const staticMiddleware = require('./static-middleware');
@@ -67,6 +68,42 @@ app.post('/api/sign-in', (req, res, next) => {
 });
 
 app.use(authorizationMiddleware);
+
+app.get('/api/coming-today/date/:date', (req, res, next) => {
+  const { userId } = req.user;
+  const { date } = req.params;
+  const sql = `
+    select *
+      from "dailyAttendees"
+      where "userId" = $1
+      and TO_CHAR("date", 'yyyy-mm-dd') = $2
+  `;
+  const params = [userId, date];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+app.get('/api/stay-home', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+    select *
+      from "stayAtHome"
+      where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 app.post('/api/coming-today', (req, res, next) => {
   const { userId } = req.user;
