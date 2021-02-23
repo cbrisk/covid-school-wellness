@@ -21,7 +21,6 @@ const db = new pg.Pool({
 
 app.post('/api/sign-up', (req, res, next) => {
   const { name, username, password, role } = req.body;
-  console.log(req.body);
   if (!name || !username || !password || !role) {
     throw new ClientError(400, 'name, username, password, and role are required fields');
   }
@@ -61,6 +60,42 @@ app.post('/api/sign-in', (req, res, next) => {
   authenticateUser(username, password, db)
     .then(result => {
       res.status(201).json(result);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+app.use(authorizationMiddleware);
+
+app.post('/api/coming-today', (req, res, next) => {
+  const { userId } = req.user;
+  const { date } = req.body;
+  const sql = `
+    insert into "dailyAttendees" ("userId", "date")
+    values ($1, $2)
+  `;
+  const params = [userId, date];
+  db.query(sql, params)
+    .then(result => {
+      res.sendStatus(201);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+app.post('/api/stay-home', (req, res, next) => {
+  const { userId } = req.user;
+  const { date } = req.body;
+  const sql = `
+    insert into "stayAtHome" ("userId", "returnDate")
+    values ($1, $2)
+  `;
+  const params = [userId, date];
+  db.query(sql, params)
+    .then(result => {
+      res.sendStatus(201);
     })
     .catch(err => {
       next(err);

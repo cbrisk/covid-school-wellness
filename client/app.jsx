@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import HomeStudent from './pages/home-student';
+import StudentMain from './pages/student-main';
 import Header from './components/header';
 import Footer from './components/footer';
 import decodeToken from './lib/decode-token';
@@ -45,7 +45,7 @@ const App = () => {
     } else if (!user) {
       return <Redirect to="sign-in" />;
     } else if (route.path === 'student') {
-      return <HomeStudent />;
+      return <StudentMain />;
     }
   }
 
