@@ -15,7 +15,7 @@ const StudentMain = props => {
   const [ stayHomeDate, setStayHomeDate, ref] = useStateRef(null);
 
   useEffect(() => {
-    fetch('/api/stay-home', {
+    fetch(`/api/stay-home/date/${dayjs().format('YYYY-MM-DD')}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-Access-Token': token
@@ -24,8 +24,9 @@ const StudentMain = props => {
       .then(response => response.json())
       .then(data => {
         if (data.length) {
+          const date = dayjs(data[0].returnDate).format('YYYY-MM-DD');
           setStatus('stay-home');
-          setStayHomeDate(dayjs(data.returnDate).format('YYYY-MM-DD'));
+          setStayHomeDate(date);
         } else {
           return fetch(`/api/coming-today/date/${dayjs().format('YYYY-MM-DD')}`, {
             headers: {
@@ -36,8 +37,8 @@ const StudentMain = props => {
             .then(response => response.json())
             .then(data => {
               if (data.length && dayjs().hour() >= 6 && dayjs().hour() <= 12) {
-                setStatus('coming today');
-              } else if (dayjs().hour() >= parseInt('06', 10) && dayjs().hour() <= parseInt('09', 10)) {
+                setStatus('coming-today');
+              } else if (dayjs().day() >= parseInt('01', 10) && dayjs().day() <= parseInt('05', 10) && dayjs().hour() >= parseInt('06', 10) && dayjs().hour() <= parseInt('08', 10)) {
                 setStatus('get-form');
               } else {
                 setStatus('school-day');

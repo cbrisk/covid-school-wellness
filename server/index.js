@@ -88,14 +88,16 @@ app.get('/api/coming-today/date/:date', (req, res, next) => {
     });
 });
 
-app.get('/api/stay-home', (req, res, next) => {
+app.get('/api/stay-home/date/:date', (req, res, next) => {
   const { userId } = req.user;
+  const { date } = req.params;
   const sql = `
     select *
       from "stayAtHome"
       where "userId" = $1
+      and TO_CHAR("returnDate", 'yyyy-mm-dd') > $2
   `;
-  const params = [userId];
+  const params = [userId, date];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows);

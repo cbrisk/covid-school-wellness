@@ -49,8 +49,7 @@ const SignUp = () => {
       });
   }
 
-  if (user && user.role === 'student') return <Redirect to="student" />;
-  if (user && user.role === 'admin') return <Redirect to="admin" />
+  if (user) return <Redirect to="" />;
   return (
     <main className="main-color d-flex align-items-center">
       <div className="sign-form rounded">
