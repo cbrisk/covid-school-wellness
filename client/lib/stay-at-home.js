@@ -4,11 +4,11 @@ const stayAtHome = (symptoms, dateOfSymptoms) => {
   let numOfDays = 0;
   let returnDate;
   if (symptoms.includes('contact')) {
-    numOfDays = 9;
+    numOfDays = 10;
   } else if (symptoms.includes('fever')) {
-    numOfDays = 6;
+    numOfDays = 7;
   } else {
-    numOfDays = 4;
+    numOfDays = 5;
   }
   returnDate = dayjs(dateOfSymptoms).add(numOfDays, 'day');
   if (dayjs(returnDate).day() === 6 || dayjs(returnDate).day() === 1) {

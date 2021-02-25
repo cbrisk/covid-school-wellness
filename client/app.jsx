@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StudentMain from './pages/student-main';
+import AdminMain from './pages/admin-main';
 import Header from './components/header';
 import Footer from './components/footer';
 import decodeToken from './lib/decode-token';
@@ -48,6 +49,10 @@ const App = () => {
       return <Redirect to="student" />;
     } else if (route.path === 'student') {
       return <StudentMain />;
+    } else if (route.path === '' && user.role === 'admin') {
+      return <Redirect to="admin" />;
+    } else if (route.path === 'admin') {
+      return <AdminMain />;
     }
   }
 
