@@ -9,6 +9,7 @@ import parseRoute from './lib/parse-route';
 import SignUp from './pages/sign-up';
 import SignIn from './pages/sign-in';
 import Redirect from './components/redirect';
+import AdminResults from './pages/admin-results';
 
 
 const App = () => {
@@ -53,6 +54,9 @@ const App = () => {
       return <Redirect to="admin" />;
     } else if (route.path === 'admin') {
       return <AdminMain />;
+    } else if (route.path === 'admin/results') {
+      const view = route.params.get('view');
+      return <AdminResults view={view}/>;
     }
   }
 

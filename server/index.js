@@ -69,7 +69,7 @@ app.post('/api/sign-in', (req, res, next) => {
 
 app.use(authorizationMiddleware);
 
-app.get('/api/coming-today/date/:date', (req, res, next) => {
+app.get('/api/student/coming-today/date/:date', (req, res, next) => {
   const { userId } = req.user;
   const { date } = req.params;
   const sql = `
@@ -88,11 +88,11 @@ app.get('/api/coming-today/date/:date', (req, res, next) => {
     });
 });
 
-app.get('/api/stay-home/date/:date', (req, res, next) => {
+app.get('/api/student/stay-home/date/:date', (req, res, next) => {
   const { userId } = req.user;
   const { date } = req.params;
   const sql = `
-    select *
+    select TO_CHAR("returnDate", 'mm-dd-yyyy') as "date"
       from "stayAtHome"
       where "userId" = $1
       and TO_CHAR("returnDate", 'yyyy-mm-dd') > $2
@@ -106,6 +106,42 @@ app.get('/api/stay-home/date/:date', (req, res, next) => {
       next(err);
     });
 });
+
+app.get('/api/admin/coming-today/date/:date', (req, res, next) => {
+  const { date } = req.params;
+  const sql = `
+    select "name"
+      from "dailyAttendees"
+      join "users" using ("userId")
+      where TO_CHAR("date", 'yyyy-mm-dd') = $1
+  `;
+  const params = [date];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
+
+app.get('/api/admin/stay-home/date/:date', (req, res, next) => {
+  const { date } = req.params;
+  const sql = `
+    select "name", TO_CHAR("returnDate", 'mm-dd-yyyy') as "date"
+      from "stayAtHome"
+      join "users" using ("userId")
+      where TO_CHAR("returnDate", 'yyyy-mm-dd') > $1
+  `;
+  const params = [date];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => {
+      next(err);
+    });
+})
 
 app.post('/api/coming-today', (req, res, next) => {
   const { userId } = req.user;
