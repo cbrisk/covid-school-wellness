@@ -11,7 +11,7 @@ const stayAtHome = (symptoms, dateOfSymptoms) => {
     numOfDays = 5;
   }
   returnDate = dayjs(dateOfSymptoms).add(numOfDays, 'day');
-  if (dayjs(returnDate).day() === 6 || dayjs(returnDate).day() === 1) {
+  if (dayjs(returnDate).day() === 6 || dayjs(returnDate).day() === 0) {
     returnDate = dayjs(returnDate).day(1);
   }
   return dayjs(returnDate).format('YYYY-MM-DD');
