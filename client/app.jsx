@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Modal from 'react-bootstrap/Modal'
 import StudentMain from './pages/student-main';
 import AdminMain from './pages/admin-main';
 import Header from './components/header';
@@ -16,6 +17,7 @@ const App = () => {
   const [ user, setUser ] = useState(null);
   const [token, setToken] = useState(null);
   const [ isAuthorizing, setAuthorizing ] = useState(true);
+  const [modalShow, setModalShow] = React.useState(false);
   const [ route, setRoute ] = useState(parseRoute(window.location.hash))
 
   useEffect(() => {
@@ -29,6 +31,10 @@ const App = () => {
     });
   }, [token]);
 
+  useEffect(() => {
+    setModalShow(true);
+  }, [])
+
   const updateUser = token => {
     window.localStorage.setItem('csw', token);
     setToken(token);
@@ -37,6 +43,10 @@ const App = () => {
   const signOut = () => {
     window.localStorage.removeItem('csw');
     setToken(null);
+  }
+
+  const handleClose = () => {
+    setModalShow(false);
   }
 
   const renderPage = () => {
@@ -61,6 +71,26 @@ const App = () => {
   }
 
   if (isAuthorizing) return null;
+  else if (modalShow) {
+    return (
+      <Modal centered show={modalShow} onHide={handleClose} className="main-color">
+        <Modal.Header closeButton>
+          <Modal.Title className="black">
+            Please note:
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="black">
+          <p>
+            The functionality of this app varies based on the day of the week as well
+            as the time of day, so you may not get the full experience when trying it out. <br /><br />
+            This app is seperately designed for students and admins. You can create your own accounts or use demo accounts: <br/>
+            username "demo-student" password "testing" <br/>
+            username "demo-admin" password "testing"
+          </p>
+        </Modal.Body>
+      </Modal>
+    );
+  }
   const contextValue = { signOut, updateUser, user, token };
   return (
     <AppContext.Provider value={contextValue}>

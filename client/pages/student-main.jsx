@@ -33,7 +33,7 @@ const StudentMain = props => {
           })
             .then(response => response.json())
             .then(data => {
-              if (data.length && dayjs().hour() >= 6 && dayjs().hour() <= 16) {
+              if (data.length && dayjs().hour() >= 6 && dayjs().hour() <= 11) {
                 setStatus('coming-today');
               } else if (dayjs().day() >= parseInt('01', 10) && dayjs().day() <= parseInt('05', 10) && dayjs().hour() >= parseInt('06', 10) && dayjs().hour() <= parseInt('08', 10)) {
                 setStatus('get-form');
