@@ -69,6 +69,16 @@ i.home-icon {
   font-size: 1.4rem;
 }
 
+@media screen and (min-width: 667px) {
+  .btn-width {
+    width: 45%;
+  }
+  .message {
+    width: 40%;
+    margin: 0 auto;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .sign-form,
   .symptom-form {
@@ -76,11 +86,6 @@ i.home-icon {
   }
   .white {
   font-size: 2.2rem;
-  }
-}
-@media screen and (min-width: 667px) {
-  .btn-width {
-    width: 45%;
   }
 }
 
