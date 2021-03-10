@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 import NavBar from '../components/navbar';
 import Message from '../components/message';
@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 
 const AdminResults = props => {
   const { token } = useContext(AppContext);
-  const [ results, setResults ] = useState([]);
-  const [ isLoading, setLoading ] = useState(true);
+  const [results, setResults] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const url = props.view === 'coming-today'
@@ -25,8 +25,8 @@ const AdminResults = props => {
       })
       .catch(error => {
         console.error('Error:', error);
-      })
-  }, [])
+      });
+  }, []);
 
   const msg = props.view === 'coming-today' ? 'Coming Today' : 'Stay Home';
   return (
@@ -39,7 +39,7 @@ const AdminResults = props => {
         </div>
       }
       {
-        results.length && !isLoading &&
+        results.length !== 0 && !isLoading &&
         <>
           <Message>{msg}</Message>
           <ul>
@@ -64,6 +64,6 @@ const AdminResults = props => {
       }
     </main>
   );
-}
+};
 
 export default AdminResults;
