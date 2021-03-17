@@ -2,7 +2,6 @@ require('dotenv/config');
 const express = require('express');
 const pg = require('pg');
 const argon2 = require('argon2');
-const dayjs = require ('dayjs');
 const authenticateUser = require('./authenticate-user');
 const authorizationMiddleware = require('./authorization-middleware');
 const staticMiddleware = require('./static-middleware');
@@ -17,7 +16,10 @@ const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
 const db = new pg.Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 app.post('/api/sign-up', (req, res, next) => {
@@ -141,7 +143,7 @@ app.get('/api/admin/stay-home/date/:date', (req, res, next) => {
     .catch(err => {
       next(err);
     });
-})
+});
 
 app.post('/api/coming-today', (req, res, next) => {
   const { userId } = req.user;
